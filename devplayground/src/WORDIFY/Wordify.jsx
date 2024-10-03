@@ -13,7 +13,8 @@ export function Wordify() {
     const [gameOver, setGameOver] = useState(false)
     const [oggettoOccorrenze, setOggettoOccorrenze] = useState({});
     const [parolaGenerata, setParolaGenerata] = useState([]);
-    const [indovinato, setIndovinato] = useState(false)
+    const [indovinato, setIndovinato] = useState(false);
+    const [showIntro, setShowIntro] = useState(!sessionStorage.getItem("intro"));
     
     /* console.log('Parola generata:', parolaGenerata); */
     console.log('Parola generata:', parolaGenerata && parolaGenerata[0] ? parolaGenerata[0].join('') : '');
@@ -45,17 +46,31 @@ export function Wordify() {
         }
     })
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowIntro(false);
+            sessionStorage.setItem("intro" , false)
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, []);
+
+
     return (
         <>
-        <Intro/>
-        {/* <div className="main-container">
-            <h1 className="neonTextTitle">{titolo}</h1>
-            <ParoleGrid indiciUguali = {indiciUguali} lettereUguali={lettereUguali} rowIndex = {rowIndex} occorenze = {oggettoOccorrenze}/>
-            {!gameOver ?
-                <Tastiera onInvio={handleInvio} rowIndex = {rowIndex} setRowIndex = {setRowIndex}
-                setParolaGenerata={setParolaGenerata}/> : <PlayAgain parolaGenerata={parolaGenerata} rowIndex={rowIndex} indovinato={indovinato}/>
+        {showIntro ? (
+            <Intro />
+        ) : (
+             <div className="main-container">
+                <h1 className="neonTextTitle">{titolo}</h1>
+                <ParoleGrid indiciUguali = {indiciUguali} lettereUguali={lettereUguali} rowIndex = {rowIndex} occorenze = {oggettoOccorrenze}/>
+                {!gameOver ?
+                    <Tastiera onInvio={handleInvio} rowIndex = {rowIndex} setRowIndex = {setRowIndex}
+                    setParolaGenerata={setParolaGenerata}/> : <PlayAgain parolaGenerata={parolaGenerata} rowIndex={rowIndex} indovinato={indovinato}/>
+                }
+            </div> 
+        )
             }
-        </div> */}
+        
         </>
     )
 }
